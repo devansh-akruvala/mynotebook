@@ -48,7 +48,7 @@ router.post('/createuser', [
     }
 })
 
-//ROUTE 2 : authenticate a user using POST: "/api/auth/login" (doesnt require auth)
+//ROUTE 2 : login a user using POST: "/api/auth/login" (doesnt require auth)
 router.post('/login', [
     body('email', 'Email cannto be empty').isEmail().exists(),
     body('password', 'Password cannto be empty').exists(),
@@ -57,15 +57,16 @@ router.post('/login', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+    let success=false
     const { email, password } = req.body;
     try {
         let user = await User.findOne({ email })
         if (!user) {
-            return res.status(400).json({ error: "Invalid email or password" })
+            return res.status(400).json({success, error: "Invalid email or password" })
         }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if (!passwordCompare) {
-            return res.status(400).json({ error: "Invalid email or password" })
+            return res.status(400).json({success, error: "Invalid email or password" })
         }
 
         const data = {
@@ -75,7 +76,8 @@ router.post('/login', [
         }
 
         const authToken = jwt.sign(data, JWT_KEY);
-        res.json({ authToken })
+        success=true
+        res.json({success, authToken })
     } catch (error) {
         res.status(500).send("Internal Server Error")
 

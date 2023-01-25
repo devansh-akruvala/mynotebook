@@ -20,9 +20,9 @@ router.post('/addnote', fetchuser, [
     }
 
     try {
-        const { title, body, desc, tag } = req.body;
+        const { title, desc, tag } = req.body;
         const note = new Notes({
-            title, body, desc, tag, user: req.user.id,
+            title, desc, tag, user: req.user.id,
         })
 
         const savedNote = await note.save();
@@ -36,7 +36,7 @@ router.post('/addnote', fetchuser, [
 
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
     try {
-        const { title,desc, tag } = req.body;
+        const { title, desc, tag } = req.body;
         const newnote = {}
         if (title) { newnote.title = title }
         if (desc) { newnote.desc = desc }
@@ -44,13 +44,13 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
 
         // find the note by id and update it
         let note = await Notes.findById(req.params.id);
-        if(!note){res.status(404).send("not found")}
-        if(note.user.toString()!= req.user.id){
+        if (!note) { res.status(404).send("not found") }
+        if (note.user.toString() != req.user.id) {
             return res.status(401).send("Invalid Opeartion")
         }
 
-        note = await Notes.findByIdAndUpdate(req.params.id,{$set:newnote},{new:true});
-        
+        note = await Notes.findByIdAndUpdate(req.params.id, { $set: newnote }, { new: true });
+
         const savedNote = await note.save();
         res.json(savedNote)
 
@@ -64,14 +64,14 @@ router.delete('/deletenote/:id', fetchuser, async (req, res) => {
     try {
         // find the note by id and update it
         let note = await Notes.findById(req.params.id);
-        if(!note){res.status(404).send("not found")}
-        if(note.user.toString()!= req.user.id){
+        if (!note) { res.status(404).send("not found") }
+        if (note.user.toString() != req.user.id) {
             return res.status(401).send("Invalid Opeartion")
         }
         note = await Notes.findByIdAndDelete(req.params.id);
-        
-       
-        res.json({"success":"note has been deleted"})
+
+
+        res.json({ "success": "note has been deleted" })
 
     } catch (error) {
         res.status(500).send("Internal Server Error")
