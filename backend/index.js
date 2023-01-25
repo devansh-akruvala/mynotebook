@@ -1,5 +1,6 @@
 const connectToMongo = require("./db")
 const express = require('express')
+const cors = require('cors')
 
 connectToMongo();
 
@@ -9,6 +10,8 @@ const port = 5000
 
 // middleware to use json
 app.use(express.json())
+// middleware to use cors
+app.use(cors())
 
 // available ROutes
 app.use('/api/auth',require('./routes/auth'))
