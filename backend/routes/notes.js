@@ -12,7 +12,7 @@ router.get('/getallnotes', fetchuser, async (req, res) => {
 
 router.post('/addnote', fetchuser, [
     body('title', 'Insert title').exists(),
-    body('body', 'Notes cannot be empty').exists(),
+    body('desc', 'Notes cannot be empty').exists(),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,10 +36,9 @@ router.post('/addnote', fetchuser, [
 
 router.put('/updatenote/:id', fetchuser, async (req, res) => {
     try {
-        const { title, body, desc, tag } = req.body;
+        const { title,desc, tag } = req.body;
         const newnote = {}
         if (title) { newnote.title = title }
-        if (body) { newnote.body = body }
         if (desc) { newnote.desc = desc }
         if (tag) { newnote.tag = tag }
 

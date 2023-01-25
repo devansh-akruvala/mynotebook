@@ -13,9 +13,6 @@ const noteSchema = new Schema({
   },
   desc: {
     type:String,
-  },
-  body: {
-    type:String,
     required:true
   },
   tag: {
