@@ -20,10 +20,10 @@ router.post('/createuser', [
     }
     try {
 
-
+        let success=false
         let user = await User.findOne({ email: req.body.email })
         if (user) {
-            return res.status(400).json({ "error": "this email already exist" })
+            return res.status(400).json({ success,"error": "this email already exist" })
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -41,7 +41,8 @@ router.post('/createuser', [
         }
 
         const authToken = jwt.sign(data, JWT_KEY);
-        res.json({ authToken })
+        success=true;
+        res.json({success,authToken })
     } catch (error) {
         console.error(error.message)
         res.status(500).send("Internal Server Error")
